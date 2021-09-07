@@ -33,6 +33,7 @@
         * 对4G stable内存进行读写仅发生在upgrade过程。
         * ![image-20210906165823881](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906165823881.png)
           * 劣势： 当堆内存在升级时有大量要写入stable内存的数据时， 可能会将cycle消耗完， 导致无法升级。 
+        * 触发时间：清理heap内存，在函数里面对全局变量进行了修改并不会被gc掉，因为外部有调用（全局变量），但是在升级的时候如果没有stable，就会被删掉。gc触发时间是在新生成的变量所           需内存大于已有的变量（2G-已用内存）或者当前已用内存大于2G时。
 
     * 其他GC的算法 ： https://blog.csdn.net/stinge/article/details/84022369?ops_request_misc=&request_id=&biz_id=102&utm_term=2-space%20copying%20collector&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-84022369.nonecase&spm=1018.2226.3001.4187
 
@@ -122,6 +123,10 @@ rts_version : **()** -> Text
 
 使用IC "aaaaa-aa" Actor可以访问IC.status， 也可以返回上面说到的内存数据
 
+### Stable内存
+stable只能用于需要持久化存储的全局变量，只在upgrade的时候写入stable内存用。
+
+
 
 
 ## 关于存储的其他Tips：
@@ -129,4 +134,6 @@ rts_version : **()** -> Text
 1. 作用于存储的数组最好使用Blob而非[Nat8]， 因为初始化数组时， 由于泛型的需要， 所有通过[X]或者Array.init初始化的数组内存布局是相同的。
 2. 当前比较成熟的解决方案：存储的数据直接放入stable内存中， 堆内存用来放置检索数据。
    1. ![image-20210906164748137](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906164748137.png)
+
+
 
