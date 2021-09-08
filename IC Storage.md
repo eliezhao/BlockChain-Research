@@ -122,7 +122,7 @@ rts_version : **()** -> Text
 ### Rust
 
 * 使用IC "aaaaa-aa" Actor可以访问IC.status， 也可以返回上面说到的内存数据
-* Rust可以通过cdk中提供的API直接操作Stable内存（未验证）[1] 
+* Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（未验证）[1] 
 
 ### Stable内存
 stable只能用于需要持久化存储的全局变量，只在upgrade的时候写入stable内存用。
