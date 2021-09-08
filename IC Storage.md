@@ -127,7 +127,7 @@ rts_version : **()** -> Text
 stable只能用于需要持久化存储的全局变量，只在upgrade的时候写入stable内存用。
 对于Canister， Canister的每个Replica都有自己的stable内存， 不是所有的Replica共享一份Stable内存
 * 之前考虑共享一份Stable内存的原因是 ： 对Motoko来说， 对Stable Memory的读写只发生在Upgrade过程， 在Upgrade之前 可以认为所有Replica达成了数据一致性， 因此不会出现读写冲突的问题， 所以我认为可以使用同一份Stable Memory
-* 实际情况是： 所有的Replica都有自己的Stable内存，分布在子网的不同节点上。[Roadmap link][1] 
+* 实际情况是： 所有的Replica都有自己的Stable内存，分布在子网的不同节点上。[1]
 
 
 
