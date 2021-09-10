@@ -121,7 +121,7 @@ rts_version : **()** -> Text
  rts_max_live_size : **()** -> Nat;
 
 #### 更新动态：
-* Motoko将提供使用32bit stable 内存的API， 并且访问stable内存的大小将随着stable内存的扩容（32bit -> 子网所有stable内存）而扩容
+* Motoko将提供使用32bit stable 内存的API， 并且访问stable内存的大小将随着stable内存的扩容（32bit -> 子网所有stable内存）而扩容[2]
 
 
 ### Rust
@@ -130,8 +130,7 @@ rts_version : **()** -> Text
 * Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（未验证）[1] 
 
 ### DFX
-* dfx 将在编译CLI命令中提供新的flag --- 指定GC（Garbage Collection 运行时垃圾回收）方式， 现阶段Motoko GC 算法为Copying算法（Minor GC）， 导致Motoko编译的Canister可使用运行时内存（WASM RTS Memory， 主要是Heap Memory）为2G。
-* 新增加的flag中会增加选择GC方式： 新增的GC算法为Compacting GC，可使Motoko编译的Canister可访问4G的运行时内存。
+* dfx 将在编译CLI命令中提供新的flag --- 指定GC（Garbage Collection 运行时垃圾回收）方式， 现阶段Motoko GC 算法为Copying算法（Minor GC）， 导致Motoko编译的Canister可使用运行时内存（WASM RTS Memory， 主要是Heap Memory）为2G。新增加的flag中会增加选择GC方式： 新增的GC算法为Compacting GC，可使Motoko编译的Canister可访问4G的运行时内存。[2]
 
 
 ### Stable内存
@@ -151,3 +150,4 @@ stable只能用于需要持久化存储的全局变量，只在upgrade的时候�
 
 ## Reference :
 [1] : RoadMap -> Increase canister stable memory from 4G to 8G(300G, whole memory of subnet)[Forum Stable Memory Roadmap](https://forum.dfinity.org/t/increased-canister-storage/6148/70?u=c-b-elite)
+[2] : 增加Motoko的GC算法与DFX新的命令行flag[Here]（https://forum.dfinity.org/t/increased-canister-storage/6148/73?u=c-b-elite）
