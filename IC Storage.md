@@ -103,6 +103,7 @@ github ： https://gist.github.com/ulan/8cc37022c72fe20dc1d57fdfd0aaf1fd
 
 ### Motoko
 
+## Prim.mo 提供访问运行时内存的API
 RTS : Run Time System 运行时系统， 包含GC， 序列化（通信传输用）， low-level 库（底层分配内存等）的调用
 
 **rts_memory_size: () -> Nat** ：当前WASM的内存， 不是使用了多少的内存， 而是已经分配了的堆内存 
@@ -119,10 +120,19 @@ rts_version : **()** -> Text
 
  rts_max_live_size : **()** -> Nat;
 
+#### 更新动态：
+* Motoko将提供使用32bit stable 内存的API， 并且访问stable内存的大小将随着stable内存的扩容（32bit -> 子网所有stable内存）而扩容
+
+
 ### Rust
 
 * 使用IC "aaaaa-aa" Actor可以访问IC.status， 也可以返回上面说到的内存数据
 * Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（未验证）[1] 
+
+### DFX
+* dfx 将在编译CLI命令中提供新的flag --- 指定GC（Garbage Collection 运行时垃圾回收）方式， 现阶段Motoko GC 算法为Copying算法（Minor GC）， 导致Motoko编译的Canister可使用运行时内存（WASM RTS Memory， 主要是Heap Memory）为2G。
+* 新增加的flag中会增加选择GC方式： 新增的GC算法为Compacting GC，可使Motoko编译的Canister可访问4G的运行时内存。
+
 
 ### Stable内存
 stable只能用于需要持久化存储的全局变量，只在upgrade的时候写入stable内存用。
