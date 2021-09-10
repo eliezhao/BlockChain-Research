@@ -131,6 +131,7 @@ rts_version : **()** -> Text
 
 ### DFX
 * dfx 将在编译CLI命令中提供新的flag --- 指定GC（Garbage Collection 运行时垃圾回收）方式， 现阶段Motoko GC 算法为Copying算法（Minor GC）， 导致Motoko编译的Canister可使用运行时内存（WASM RTS Memory， 主要是Heap Memory）为2G。新增加的flag中会增加选择GC方式： 新增的GC算法为Compacting GC，可使Motoko编译的Canister可访问4G的运行时内存。[2]
+  * moc 中flag可选 --compacting gc 来更换coping gc
 
 
 ### Stable内存
