@@ -149,5 +149,5 @@ stable只能用于需要持久化存储的全局变量，只在upgrade的时候�
 
 
 ## Reference :
-[1] : RoadMap -> Increase canister stable memory from 4G to 8G(300G, whole memory of subnet)[Forum Stable Memory Roadmap](https://forum.dfinity.org/t/increased-canister-storage/6148/70?u=c-b-elite)
-[2] : 增加Motoko的GC算法与DFX新的命令行flag[Here](https://forum.dfinity.org/t/increased-canister-storage/6148/73?u=c-b-elite)
+* [1] : RoadMap -> Increase canister stable memory from 4G to 8G(300G, whole memory of subnet)[Forum Stable Memory Roadmap](https://forum.dfinity.org/t/increased-canister-storage/6148/70?u=c-b-elite)
+* [2] : 增加Motoko的GC算法与DFX新的命令行flag[Here](https://forum.dfinity.org/t/increased-canister-storage/6148/73?u=c-b-elite)
