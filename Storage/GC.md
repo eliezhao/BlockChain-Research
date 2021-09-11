@@ -35,7 +35,9 @@ moc使用方法文档 ： https://sdk.dfinity.org/docs/language-guide/compiler-r
 
 moc的可执行文件在`~/.cache/dfinity/versions/0.8.1/` （版本号可变）
 
-
+## TODO： 
+* 实验评估Coping GC 与 Compacting GC ： Cycles的消耗和速度对比
+* Compacting GC触发内存大小
 
 
 
