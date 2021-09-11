@@ -31,7 +31,9 @@ moc 工具是将.mo文件编译为.wasm文件， 生成.did文件的， 平时�
 
 P.S.  如果更改了源码， 仅仅用moc生成.wasm文件是不行的， 还需要用moc文件生成.did文件。
 
+moc使用方法文档 ： https://sdk.dfinity.org/docs/language-guide/compiler-ref.html
 
+moc的可执行文件在`~/.cache/dfinity/versions/0.8.1/` （版本号可变）
 
 
 
