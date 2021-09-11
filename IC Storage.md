@@ -7,7 +7,7 @@
   * 8G :
 
     * Canister的总体内存包含wasm run time 和 stable memory，对一个Canister而言， 两个都为4G
-      * ![image-20210906153942236](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906153942236.png)
+      * ![image-20210906153942236](images\image-20210906153942236.png)
     * 由于wasmtime是32bit的指针地址域，因此是4G，而stable memory需要和wasm time适配， 所以也是4G，现在提高的是stable内存， 可以简单的理解为此次升级是在Canister和stable memory内存之间加了一个中间件， 让32bit的wasmtime可以使用8G的stable内存（实际上是扩容到了16T， 即64bit， 但是官方此次仅提升到8G）
       * ![image-20210906162315617](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906162315617.png)
     * 4G 的stable内存（非WebAssembly）
