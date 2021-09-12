@@ -43,7 +43,7 @@ DFX 0.8.1 创建的项目中， dfx.json 文件中， build 目录下新增 `"ar
 }
 ```
 
-即可从Motoko默认的Coping GC转换为Compacting GC， Compacting GC详细介绍参考上文Compacting GC， Coping GC请参考[IC Storage](#./IC Storage.md)
+即可从Motoko默认的Coping GC转换为Compacting GC， Compacting GC详细介绍参考上文Compacting GC， Coping GC请参考IC Storage（本层文件夹下另一Markdown文件）
 
 
 
