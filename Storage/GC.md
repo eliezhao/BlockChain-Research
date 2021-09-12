@@ -35,6 +35,7 @@ moc使用方法文档 ： https://sdk.dfinity.org/docs/language-guide/compiler-r
 
 moc的可执行文件在`~/.cache/dfinity/versions/0.8.1/` （版本号可变）
 
+<<<<<<< HEAD
 ## 版本更新
 
 ### DFX
@@ -62,6 +63,11 @@ DFX 0.8.1 创建的项目中， dfx.json 文件中， build 目录下新增 `"ar
 ```
 
 即可从Motoko默认的Coping GC转换为Compacting GC， Compacting GC详细介绍参考上文Compacting GC， Coping GC请参考[IC Storage](./IC Storage.md)
+=======
+## TODO： 
+* 实验评估Coping GC 与 Compacting GC ： Cycles的消耗和速度对比
+* Compacting GC触发内存大小
+>>>>>>> ccadcad6c11cfc5208aa83a4d9971469415c2e95
 
 
 
