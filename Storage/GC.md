@@ -15,30 +15,11 @@
 
 对执行效率要求不高， 存储数据（或存储索引数据），或者Canister中保存的活体对象比较多的情况下， 建议用Compacting GC。 Compacting GC消耗的Cycle比Coping GC多。
 
-现在还有一个测试CLI 命令， 可以在平时禁用GC， 待upgrade的时候再GC
+现在moc中还有一个测试CLI 命令， 可以在平时禁用GC， 待upgrade的时候再GC
 
 ## 使用方法
 
-moc 工具是将.mo文件编译为.wasm文件， 生成.did文件的， 平时是在dfx build时运行。
-
- 生成compacting gc 的 Canister：
-
-首先， 使用dfx build Canister， 编译的文件在dfx.json所在的文件夹， .dfx/local/canisters中， dfx build 生成.wasm， .did等文件。
-
-将需要用compacting gc的Canister的.wasm文件从.dfx/local/canisters/canister_name/文件夹下删除
-
-在.dfx/local/canisters/canister_name/文件夹下使用： `moc --compacting-gc motoko_file（motoko文件所在地址）-o ./canister_name.wasm（生成的canister的名字，也就是之前删除的canister.wasm的canister名）` 生成.wasm文件
-
-P.S.  如果更改了源码， 仅仅用moc生成.wasm文件是不行的， 还需要用moc文件生成.did文件。
-
-moc使用方法文档 ： https://sdk.dfinity.org/docs/language-guide/compiler-ref.html
-
-moc的可执行文件在`~/.cache/dfinity/versions/0.8.1/` （版本号可变）
-
-<<<<<<< HEAD
-## 版本更新
-
-### DFX
+### DFX （0.8.1 +）
 
 DFX 0.8.1 更新指定GC方法： 
 
@@ -63,13 +44,32 @@ DFX 0.8.1 创建的项目中， dfx.json 文件中， build 目录下新增 `"ar
 ```
 
 即可从Motoko默认的Coping GC转换为Compacting GC， Compacting GC详细介绍参考上文Compacting GC， Coping GC请参考[IC Storage](./IC Storage.md)
-=======
+
+
+
+### Moc
+
+moc 工具是将.mo文件编译为.wasm文件， 生成.did文件的， 平时是在dfx build时运行。
+
+ 生成compacting gc 的 Canister：
+
+首先， 使用dfx build Canister， 编译的文件在dfx.json所在的文件夹， .dfx/local/canisters中， dfx build 生成.wasm， .did等文件。
+
+将需要用compacting gc的Canister的.wasm文件从.dfx/local/canisters/canister_name/文件夹下删除
+
+在.dfx/local/canisters/canister_name/文件夹下使用： `moc --compacting-gc motoko_file（motoko文件所在地址）-o ./canister_name.wasm（生成的canister的名字，也就是之前删除的canister.wasm的canister名）` 生成.wasm文件
+
+P.S.  如果更改了源码， 仅仅用moc生成.wasm文件是不行的， 还需要用moc文件生成.did文件。
+
+moc使用方法文档 ： https://sdk.dfinity.org/docs/language-guide/compiler-ref.html
+
+moc的可执行文件在`~/.cache/dfinity/versions/0.8.1/` （版本号可变）
+
+
+
 ## TODO： 
 * 实验评估Coping GC 与 Compacting GC ： Cycles的消耗和速度对比
-* Compacting GC触发内存大小
->>>>>>> ccadcad6c11cfc5208aa83a4d9971469415c2e95
-
-
+* Motoko Compacting GC触发内存大小
 
 
 
