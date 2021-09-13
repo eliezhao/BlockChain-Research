@@ -39,7 +39,7 @@ DFX 0.8.1 创建的项目中， dfx.json 文件中， build 目录下新增 `"ar
 ``` "build" : {
 "build" : {
 "args" : "--compacting-gc",
-"packtool" : "vessel sources"
+"packtool" : ""
 }
 ```
 
