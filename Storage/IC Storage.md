@@ -2,7 +2,7 @@
 
 ## Canister
 
-* 8G & 4G & 2G & GC ： 
+* 12G&8G & 4G & 2G & GC ： 
 
   * 8G :
 
@@ -35,7 +35,18 @@
           * 劣势： 当堆内存在升级时有大量要写入stable内存的数据时， 可能会将cycle消耗完， 导致无法升级。 
         * 触发时间：清理heap内存，在函数里面对全局变量进行了修改并不会被gc掉，因为外部有调用（全局变量），但是在升级的时候如果没有stable，就会被删掉。gc触发时间是在新生成的变量所           需内存大于已有的变量（2G-已用内存）或者当前已用内存大于2G时。
 
-    * 其他GC的算法 ： https://blog.csdn.net/stinge/article/details/84022369?ops_request_misc=&request_id=&biz_id=102&utm_term=2-space%20copying%20collector&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-84022369.nonecase&spm=1018.2226.3001.4187
+    * [其他GC的算法](https://blog.csdn.net/stinge/article/details/84022369?ops_request_misc=&request_id=&biz_id=102&utm_term=2-space%20copying%20collector&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-84022369.nonecase&spm=1018.2226.3001.4187)
+    
+  * 因此， 每个Canister的全部内存加起来一共12G（8G stable + 4G RTS Memory）
+
+### Canister 存储数据的三种方式 ：
+
+* 运行时：
+  * 在编译时就写在WASM（Canister）中的静态变量
+  * WASM Heap（堆内存）
+* Stable内存：
+  * Motoko可以在升级时与Stable内存交互， 未来会增加运行时与Stable内存交互的API（等待）
+  * Rust可以在运行时和Stable内存进行交互， 正在研究。
 
 ## 存储提案
 
@@ -79,7 +90,7 @@ github ： https://gist.github.com/ulan/8cc37022c72fe20dc1d57fdfd0aaf1fd
 * 对Canister而言， Canister可以使用的内存从4G -> 8G（stable内存而非堆内存）
   * 8G是当前提案的结果， 以后根据社区反馈会提升这个数字
   * ![image-20210906170557873](../images/image-20210906170557873.png)
-  * **如果stable内存高于4G， 那么使用了升级内存API的Canister和没有使用此API的Canister交互将会出现问题，当前的方案是发生上述情况时， 会发生trap（应该是编译时）**
+  * **如果stable内存高于4G， 那么使用了升级内存API的Canister和没有使用此API的Canister交互将会出现问题，当前的方案是发生上述情况时， 会发生trap**
 
 社区现状：
 
@@ -110,7 +121,7 @@ RTS : Run Time System 运行时系统， 包含GC， 序列化（通信传输用
 
 **rts_heap_size: () -> Nat** ： 当前实际堆内存大小
 
-**rts_max_live_size : () -> Nat** ： 从上次GC到现在堆最大的大小
+**rts_max_live_size : () -> Nat** ： 从上次GC到现在堆最大的大小【这个比较有用， RTS_Memory应该为RTS_HEAP_SIZE + 196108byte(比rts运行时组件稍微大一些)】
 
 rts_total_allocation: () -> Nat;
 
@@ -127,20 +138,38 @@ rts_version : **()** -> Text
 ### Rust
 
 * 使用IC "aaaaa-aa" Actor可以访问IC.status， 也可以返回上面说到的内存数据
-* Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（未验证）[1] 
+* Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（TODO）[1] 
 
 ### DFX
 * dfx 将在编译CLI命令中提供新的flag --- 指定GC（Garbage Collection 运行时垃圾回收）方式， 现阶段Motoko GC 算法为Copying算法（Minor GC）， 导致Motoko编译的Canister可使用运行时内存（WASM RTS Memory， 主要是Heap Memory）为2G。新增加的flag中会增加选择GC方式： 新增的GC算法为Compacting GC，可使Motoko编译的Canister可访问4G的运行时内存。[2]
   * moc 中flag可选 --compacting gc 来更换coping gc
+  
+* dfx 0.8.1 以上版本 ：
+
+  * 在 dfx.json 中
+
+  * ``````json
+    "build":{
+        "args" : "--compacting-gc"
+    }
+    ``````
+
+  * 通过如上方式可以更改copying gc 到 compacting gc
+
+* //TODO 
+
+  * dfx --memory-allocation
+  * Reserved : Canister自动管理内存， 但是不会超过最大限制， 收费按照12G(Stable+RTS)来算
+  * Best-effort ： Canister默认使用所有内存， 可能会超过子网最大内存， 会有风险
+  * [reference](https://forum.dfinity.org/t/memory-allocation-explained/7761#ic-storage-basics-2)
 
 
 ### Stable内存
 stable只能用于需要持久化存储的全局变量，只在upgrade的时候写入stable内存用。
 对于Canister， Canister的每个Replica都有自己的stable内存， 不是所有的Replica共享一份Stable内存
+
 * 之前考虑共享一份Stable内存的原因是 ： 对Motoko来说， 对Stable Memory的读写只发生在Upgrade过程， 在Upgrade之前 可以认为所有Replica达成了数据一致性， 因此不会出现读写冲突的问题， 所以我认为可以使用同一份Stable Memory
 * 实际情况是： 所有的Replica都有自己的Stable内存，分布在子网的不同节点上。[1]
-
-
 
 ## 关于存储的其他Tips：
 
@@ -148,7 +177,14 @@ stable只能用于需要持久化存储的全局变量，只在upgrade的时候�
 2. 当前比较成熟的解决方案：存储的数据直接放入stable内存中， 堆内存用来放置检索数据。
    1. ![image-20210906164748137](../images/image-20210906164748137.png)
 
+## 费用
+
+1G大约6美元/年（127000 Cycles）， 可以被NNS 提案更改[reference](https://forum.dfinity.org/t/memory-allocation-explained/7761#costs-5)
+
+[其他收费资料](https://sdk.dfinity.org/docs/developers-guide/computation-and-storage-costs.html)
 
 ## Reference :
+
 * [1] : RoadMap -> Increase canister stable memory from 4G to 8G(300G, whole memory of subnet)[Forum Stable Memory Roadmap](https://forum.dfinity.org/t/increased-canister-storage/6148/70?u=c-b-elite)
 * [2] : 增加Motoko的GC算法与DFX新的命令行flag[Here](https://forum.dfinity.org/t/increased-canister-storage/6148/73?u=c-b-elite)
+* [3] : https://forum.dfinity.org/t/memory-allocation-explained/7761
