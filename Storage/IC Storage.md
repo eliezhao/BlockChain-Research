@@ -2,46 +2,57 @@
 
 ## Canister
 
-* 8G & 4G & 2G & GC ： 
+* 12G&8G & 4G & 2G & GC ： 
 
   * 8G :
 
     * Canister的总体内存包含wasm run time 和 stable memory，对一个Canister而言， 两个都为4G
-      * ![image-20210906153942236](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906153942236.png)
+      * ![image-20210906153942236](../images/image-20210906153942236.png)
     * 由于wasmtime是32bit的指针地址域，因此是4G，而stable memory需要和wasm time适配， 所以也是4G，现在提高的是stable内存， 可以简单的理解为此次升级是在Canister和stable memory内存之间加了一个中间件， 让32bit的wasmtime可以使用8G的stable内存（实际上是扩容到了16T， 即64bit， 但是官方此次仅提升到8G）
-      * ![image-20210906162315617](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906162315617.png)
+      * ![image-20210906162315617](../images/image-20210906162315617.png)
     * 4G 的stable内存（非WebAssembly）
-      * ![image-20210906161644343](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906161644343.png)
+      * ![image-20210906161644343](../images/image-20210906161644343.png)
     * 4G 的堆内存（GC限制）
 
   * 4G （这里说的是Canister堆内存）： IC在进行技术选型时， WASM尚未开发出64 bit 的虚拟机， 因此当时采用了32 bit的WASM虚拟机， 造成现在单体Canister的内存为4G.
 
     * 2G ： wasm 单体的内存空间为4G， 但是由于Motoko所选用的GC（Garbage Collector 垃圾回收）算法为Copying 算法[1]， 造成由Motoko写的Canister只能使用2G内存空间
 
-      ![image-20210906113445607](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906113445607.png)
+      ![image-20210906113445607](../images/image-20210906113445607.png)
 
     * [1] Coping Collector Algorithm （也称为Minor GC）： 
 
       * 简述该算法在WASM Canister中的应用：
         * 4G 的Canister被划分为两个区域 ： from space & to space， 分别占用2G； 数据写入时， 所有的数据都在to space中。
         * 在进行dfx canister install xxx(default : --all) -- mode upgrade的时候， 会进行GC，即：将活动对象（正在使用的对象，可以是引用也可以是元数据）所在空间换为from space， 原from space换为to space， 然后对from space（数据所在的内存空间）进行遍历， 将所有的活动对象迁移到新的to space中， 剩下的就是非活动对象， 也就是内存垃圾， Canister会将这部分数据清理掉。
-        * ![image-20210906115205832](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906115205832.png)
+        * ![image-20210906115205832](../images/image-20210906115205832.png)
         * 优势
           * 内存使用率很高，写数据时是对堆进行连续写入， 所以利用率更高 。适用于快速增删数据的场景。（现在Java的JVM等新一代VM都一定程度上采用了Minor GC）
         * 缺陷： 
           * 浪费了一半的堆内存空间，可能会使用Compacting GC算法， 这个算法不会占用一半的内存来进行GC，可以使用全部的WASM内存
         * 对4G stable内存进行读写仅发生在upgrade过程。
-        * ![image-20210906165823881](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906165823881.png)
+        * ![image-20210906165823881](../images/image-20210906165823881.png)
           * 劣势： 当堆内存在升级时有大量要写入stable内存的数据时， 可能会将cycle消耗完， 导致无法升级。 
         * 触发时间：清理heap内存，在函数里面对全局变量进行了修改并不会被gc掉，因为外部有调用（全局变量），但是在升级的时候如果没有stable，就会被删掉。gc触发时间是在新生成的变量所           需内存大于已有的变量（2G-已用内存）或者当前已用内存大于2G时。
 
-    * 其他GC的算法 ： https://blog.csdn.net/stinge/article/details/84022369?ops_request_misc=&request_id=&biz_id=102&utm_term=2-space%20copying%20collector&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-84022369.nonecase&spm=1018.2226.3001.4187
+    * [其他GC的算法](https://blog.csdn.net/stinge/article/details/84022369?ops_request_misc=&request_id=&biz_id=102&utm_term=2-space%20copying%20collector&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-84022369.nonecase&spm=1018.2226.3001.4187)
+    
+  * 因此， 每个Canister的全部内存加起来一共12G（8G stable + 4G RTS Memory）
+
+### Canister 存储数据的三种方式 ：
+
+* 运行时：
+  * 在编译时就写在WASM（Canister）中的静态变量
+  * WASM Heap（堆内存）
+* Stable内存：
+  * Motoko可以在升级时与Stable内存交互， 未来会增加运行时与Stable内存交互的API（等待）
+  * Rust可以在运行时和Stable内存进行交互， 正在研究。
 
 ## 存储提案
 
 Forum讨论 ： https://forum.dfinity.org/t/increased-canister-storage/6148/67
 
-![image-20210906175246419](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906175246419.png)
+![image-20210906175246419](../images/image-20210906175246419.png)
 
 提案内容： 提供一个系统API， 使每个Canister都可以使用子网所有的内存空间， 所有的副本都有自己的数据状态，即并非所有副本共用一个数据状态（这很好理解， 如果这样， 那就会出现并发问题，需要锁或者通道机制来避免冲突， 但事实上子网内使用的是共识来保证数据一致性）。
 
@@ -78,8 +89,8 @@ github ： https://gist.github.com/ulan/8cc37022c72fe20dc1d57fdfd0aaf1fd
 
 * 对Canister而言， Canister可以使用的内存从4G -> 8G（stable内存而非堆内存）
   * 8G是当前提案的结果， 以后根据社区反馈会提升这个数字
-  * ![image-20210906170557873](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906170557873.png)
-  * **如果stable内存高于4G， 那么使用了升级内存API的Canister和没有使用此API的Canister交互将会出现问题，当前的方案是发生上述情况时， 会发生trap（应该是编译时）**
+  * ![image-20210906170557873](../images/image-20210906170557873.png)
+  * **如果stable内存高于4G， 那么使用了升级内存API的Canister和没有使用此API的Canister交互将会出现问题，当前的方案是发生上述情况时， 会发生trap**
 
 社区现状：
 
@@ -94,8 +105,8 @@ github ： https://gist.github.com/ulan/8cc37022c72fe20dc1d57fdfd0aaf1fd
 建议：
 
 * 现阶段还是一个实验性的API， 建议不要使用。等待成熟以后再使用。
-* ![image-20210906170438547](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906170438547.png)
-* ![image-20210906170539289](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906170539289.png)
+* ![image-20210906170438547](../images/image-20210906170438547.png)
+* ![image-20210906170539289](../images/image-20210906170539289.png)
 
 
 
@@ -103,13 +114,14 @@ github ： https://gist.github.com/ulan/8cc37022c72fe20dc1d57fdfd0aaf1fd
 
 ### Motoko
 
+## Prim.mo 提供访问运行时内存的API
 RTS : Run Time System 运行时系统， 包含GC， 序列化（通信传输用）， low-level 库（底层分配内存等）的调用
 
 **rts_memory_size: () -> Nat** ：当前WASM的内存， 不是使用了多少的内存， 而是已经分配了的堆内存 
 
 **rts_heap_size: () -> Nat** ： 当前实际堆内存大小
 
-**rts_max_live_size : () -> Nat** ： 从上次GC到现在堆最大的大小
+**rts_max_live_size : () -> Nat** ： 从上次GC到现在堆最大的大小【这个比较有用， RTS_Memory应该为RTS_HEAP_SIZE + 196108byte(比rts运行时组件稍微大一些)】
 
 rts_total_allocation: () -> Nat;
 
@@ -119,25 +131,60 @@ rts_version : **()** -> Text
 
  rts_max_live_size : **()** -> Nat;
 
+#### 更新动态：
+* Motoko将提供使用32bit stable 内存的API， 并且访问stable内存的大小将随着stable内存的扩容（32bit -> 子网所有stable内存）而扩容[2]
+
+
 ### Rust
 
 * 使用IC "aaaaa-aa" Actor可以访问IC.status， 也可以返回上面说到的内存数据
-* Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（未验证）[1] 
+* Rust可以在非Upgrade时期， 通过cdk中提供的API直接操作Stable内存（TODO）[1] 
+
+### DFX
+* dfx 将在编译CLI命令中提供新的flag --- 指定GC（Garbage Collection 运行时垃圾回收）方式， 现阶段Motoko GC 算法为Copying算法（Minor GC）， 导致Motoko编译的Canister可使用运行时内存（WASM RTS Memory， 主要是Heap Memory）为2G。新增加的flag中会增加选择GC方式： 新增的GC算法为Compacting GC，可使Motoko编译的Canister可访问4G的运行时内存。[2]
+  * moc 中flag可选 --compacting gc 来更换coping gc
+  
+* dfx 0.8.1 以上版本 ：
+
+  * 在 dfx.json 中
+
+  * ``````json
+    "build":{
+        "args" : "--compacting-gc"
+    }
+    ``````
+
+  * 通过如上方式可以更改copying gc 到 compacting gc
+
+* //TODO 
+
+  * dfx --memory-allocation
+  * Reserved : Canister自动管理内存， 但是不会超过最大限制， 收费按照12G(Stable+RTS)来算
+  * Best-effort ： Canister默认使用所有内存， 可能会超过子网最大内存， 会有风险
+  * [reference](https://forum.dfinity.org/t/memory-allocation-explained/7761#ic-storage-basics-2)
+
 
 ### Stable内存
 stable只能用于需要持久化存储的全局变量，只在upgrade的时候写入stable内存用。
 对于Canister， Canister的每个Replica都有自己的stable内存， 不是所有的Replica共享一份Stable内存
+
 * 之前考虑共享一份Stable内存的原因是 ： 对Motoko来说， 对Stable Memory的读写只发生在Upgrade过程， 在Upgrade之前 可以认为所有Replica达成了数据一致性， 因此不会出现读写冲突的问题， 所以我认为可以使用同一份Stable Memory
 * 实际情况是： 所有的Replica都有自己的Stable内存，分布在子网的不同节点上。[1]
-
-
 
 ## 关于存储的其他Tips：
 
 1. 作用于存储的数组最好使用Blob而非[Nat8]， 因为初始化数组时， 由于泛型的需要， 所有通过[X]或者Array.init初始化的数组内存布局是相同的。
 2. 当前比较成熟的解决方案：存储的数据直接放入stable内存中， 堆内存用来放置检索数据。
-   1. ![image-20210906164748137](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20210906164748137.png)
+   1. ![image-20210906164748137](../images/image-20210906164748137.png)
 
+## 费用
+
+1G大约6美元/年（127000 Cycles）， 可以被NNS 提案更改[reference](https://forum.dfinity.org/t/memory-allocation-explained/7761#costs-5)
+
+[其他收费资料](https://sdk.dfinity.org/docs/developers-guide/computation-and-storage-costs.html)
 
 ## Reference :
-[1] : RoadMap -> Increase canister stable memory from 4G to 8G(300G, whole memory of subnet)[Forum Stable Memory Roadmap](https://forum.dfinity.org/t/increased-canister-storage/6148/70?u=c-b-elite)
+
+* [1] : RoadMap -> Increase canister stable memory from 4G to 8G(300G, whole memory of subnet)[Forum Stable Memory Roadmap](https://forum.dfinity.org/t/increased-canister-storage/6148/70?u=c-b-elite)
+* [2] : 增加Motoko的GC算法与DFX新的命令行flag[Here](https://forum.dfinity.org/t/increased-canister-storage/6148/73?u=c-b-elite)
+* [3] : https://forum.dfinity.org/t/memory-allocation-explained/7761
