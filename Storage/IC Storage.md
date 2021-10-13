@@ -54,7 +54,9 @@
 
 对执行效率要求不高， 存储数据（或存储索引数据），或者Canister中保存的活体对象比较多的情况下， 建议用Compacting GC。 Compacting GC消耗的Cycle比Coping GC多。
 
+#### Compacting GC & Coping GC 比较
 
+[Reference](https://github.com/dfinity/motoko/issues/2033#issuecomment-842379468)
 
 ### Canister 存储数据的三种方式 ：
 

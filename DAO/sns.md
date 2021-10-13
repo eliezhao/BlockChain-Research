@@ -11,7 +11,7 @@
 
 #### NNS ：
 
-![image-20211011092930982](image-20211011092930982.png)
+![image-20211011092930982](../images/image-20211011092930982.png)
 
 
 
@@ -19,7 +19,7 @@ NNS Canister的三个功能 ： Governance， Ledger， Registry
 
 投票： 神经元投票
 
-![image-20211011094525502](image-20211011094525502.png)
+![image-20211011094525502](../images/image-20211011094525502.png)
 
 Ledger Canister： 存储交易信息 
 
