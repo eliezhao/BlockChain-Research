@@ -65,7 +65,6 @@ DFX 0.8.1 创建的项目中， dfx.json 文件中， build 目录下新增 `"ar
     * 创建一个使用 1 MB 的 canister ： ``` dfx canister create --memory-allocation "1 MiB"  ```
     * 升级canister ：``` dfx canister update-settings --memory-allocation "1 MiB" hello ```
 
-    
 
 ### Moc
 
