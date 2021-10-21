@@ -23,15 +23,15 @@ NNS Canister的三个功能 ： Governance， Ledger， Registry
 
 Ledger Canister： 存储交易信息 
 
-![image-20211011094644265](image-20211011094644265.png)
+![image-20211011094644265](../images/image-20211011094644265.png)
 
 Registry Canister： 配置节点和子网：
 
-![image-20211011094803829](image-20211011094803829.png)
+![image-20211011094803829](../images/image-20211011094803829.png)
 
 目前来看， 官方眼中的SNS是NNS的一种拓展， NNS管理IC， SNS管理DAPP。但是NNS是SNS的上级。
 
-![image-20211011094948798](image-20211011094948798.png)
+![image-20211011094948798](image-20211011094948798-16347973566411.png)
 
 NNS 与 SNS的关系：
 
@@ -40,7 +40,7 @@ NNS 与 SNS的关系：
 * SNS 是一个开放服务， 相当于IC提供的服务（我觉得可以不用这个服务）
 * SNS 的实现提供了标准（DAO， Token等）
 
-![image-20211011100801187](image-20211011100801187.png)
+![image-20211011100801187](image-20211011100801187-16347974370652.png)
 
 
 
@@ -50,7 +50,7 @@ NNS 与 SNS的关系：
 * SNS Canister 机制设计
 * SNS Token 机制设计
 
-![image-20211011095322560](image-20211011095322560.png)
+![image-20211011095322560](image-20211011095322560-16347974523153.png)
 
 SNS简述 ： 
 
@@ -63,7 +63,7 @@ SNS Token ：
 * 部分SNS Token 需要锁定到神经元中， 以让购买Token的人共同为了DAPP的发展而努力， 相信这个token未来仍然是有价值的， 并且为了SNS的未来价值而努力。
 * 创建的管理生态是 ： 开发者， 用户， 投资者共治 ：
 
-![image-20211011095605831](image-20211011095605831.png)
+![image-20211011095605831](../images/image-20211011095605831.png)
 
 
 
@@ -76,7 +76,7 @@ SNS Canister 分为两个主要的Canister类型：
 
 与NNS Canister不同的是， SNS Canister 消耗 Cycles
 
-![image-20211011100707407](image-20211011100707407.png)
+![image-20211011100707407](../images/image-20211011100707407.png)
 
 猜测 ： 参与SNS的用户应该会在nns.ic0.app中的神经元模块显示你参与到哪个SNS
 
@@ -84,12 +84,12 @@ SNS Canister 分为两个主要的Canister类型：
 
 DAPP申请SNS的流程 ： 
 
-![image-20211011103001188](image-20211011103001188.png)
+![image-20211011103001188](../images/image-20211011103001188.png)
 
 * 开发者向NNS发起提案申请： 提案包含SNS Token Name， 要被赋予SNS的DAPP信息。
 
 * NNS接受并且通过提案后， NNS会创建一个空的SNS Canister ， 这个时期， Ledger Canister是被Frozen的， 并且开发者仍然可以控制Canister， 包括修改代码， upgrade等
-* ![image-20211011103303664](image-20211011103303664.png)
+* ![image-20211011103303664](../images/image-20211011103303664.png)
 
 *  当开发者准备好后， 启动SNS Canister： 开放Token 和 治理权限， Canister Controller将会从Developers转移到SNS。当这些都完成后， Ledger Canister会开放。
 
@@ -105,7 +105,7 @@ Token分配演示 ：
 
 假如 1 Billion SNS Token， 25%分配给开发者，  35%分配给SNS Governance， 40给投资者。
 
-![image-20211011103720011](image-20211011103720011.png)
+![image-20211011103720011](../images/image-20211011103720011.png)
 
 * P.S. 图中分配方式只是演示， 并没有说Token分配模型是这个， 根据Forum上的信息， 这个分配额度是可以被修改的， 官方没有说明这个Token分配是固定的
 * Token支持通货膨胀。
@@ -114,17 +114,17 @@ Token分配演示 ：
 
 Token拍卖 ：
 
-![image-20211011114652894](image-20211011114652894.png)
+![image-20211011114652894](../images/image-20211011114652894.png)
 
 拍卖流程 ： 
 
 ​	Token发布后，  份额将通过Auction Canister进行拍卖， 每个User可以出自己的价格（Cycle）， 当拍卖截至日期后， Auction Canister会决定最终价格（并非最高为准）， 让所有人根据同一个价格买到token。这些cycle会汇给SNS Governance Canister。（拍卖的Token为投资者的Token）
 
-![image-20211011105907865](image-20211011105907865.png)
+![image-20211011105907865](../images/image-20211011105907865.png)
 
 90 % 的Governance Token会被锁到神经元中， 以保证Token的长期价值。 10%的流动性让市场能做起来。
 
-![image-20211011105713053](image-20211011105713053.png)
+![image-20211011105713053](../images/image-20211011105713053.png)
 
 
 
@@ -134,7 +134,7 @@ Token拍卖 ：
 
 SNS 的 Token可以用来奖励DAPP早期的参与者和用户。
 
-![image-20211011110100639](image-20211011110100639.png)
+![image-20211011110100639](../images/image-20211011110100639.png)
 
 
 
@@ -144,7 +144,7 @@ NNS <> SNS <> DAPP
 
 NNS管理SNS， SNS 管理 DAPP。SNS支持多Canister应用。
 
-![image-20211011101226899](image-20211011101226899.png)
+![image-20211011101226899](../images/image-20211011101226899.png)
 
 
 
