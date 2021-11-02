@@ -1,0 +1,22 @@
+{
+  "canisters": {
+    "bucket": {
+      "main": "src/Experiment_StableBucket/main.mo",
+      "type": "motoko"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "--compacting-gc",
+      "packtool": ""
+    }
+  },
+  "dfx": "0.8.3",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  },
+  "version": 1
+}
