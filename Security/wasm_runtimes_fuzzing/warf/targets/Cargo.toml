@@ -1,0 +1,24 @@
+[package]
+name = "fuzz-targets"
+version = "0.1.0"
+authors = ["Patrick Ventuzelo <ventuzelo.patrick@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+wasmi = "*"
+wasmi-validation = "*"
+parity-wasm = "0.41.0"
+wasmer-runtime = "*"
+wasmer-singlepass-backend = "*"
+wasmtime = "*"
+# lightbeam = "*"
+wasmparser = "*"
+binaryen = "*"
+wabt = "*"
+wasmprinter = "*"
+wain-validate = "*"
+wain-syntax-binary = "*"
+wat = "*"
+wast = "*"
+wasm3 = { git = "https://github.com/Veykril/wasm3-rs", features=["build-bindgen"]}
+fizzy = "0.6.0-dev"
