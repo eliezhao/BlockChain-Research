@@ -1,6 +1,6 @@
 # P2P Lyaer
 
-官方视频介绍链接 ： [REFERENCE](https://www.youtube.com/watch?v=HOQb0lKIy9I&t=4s)
+官方视频介绍链接 ： [Reference](https://www.youtube.com/watch?v=HOQb0lKIy9I&t=4s)
 
 * 总体设计：
 
