@@ -19,7 +19,7 @@ I will introduce the following aspects
 
 ​		The goal of DFINITY Foundation is to create a truly “ World Computer ” with high performance, decentralized, infinitely, scalable features to achieve a new generation of Internet technology revolution, which is the ICP protocol.
 
-![image-20211205030629293](C:\Users\20195\AppData\Roaming\Typora\typora-user-images\image-20211205030629293.png)
+![image-20211205030629293](introduction.assets\image-20211205030629293.png)
 
 
 
