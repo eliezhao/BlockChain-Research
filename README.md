@@ -1,6 +1,7 @@
 # Internet-Computer-Research
 This is a respository for InternetComputer Blockchain(DFINITY) research.
 # Themes:
+* Interduction Of Internet Computer - IC介绍
 * Canister Development -  Canister相关
 * Security - wasm vm / canister 安全
 * Source code analysis - 源码分析（所有源码）
