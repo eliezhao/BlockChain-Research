@@ -4,13 +4,13 @@
 
 * 12G&8G & 4G & 2G & GC ： 
 
-  * 8G :
+  * 12G :
 
-    * Canister的总体内存包含wasm run time 和 stable memory，对一个Canister而言， 两个都为4G
+    * Canister的总体内存包含wasm run time 和 stable memory，对一个Canister而言， 前者为4G，后者为8G（以后可继续拓展最大为300G）
       * ![image-20210906153942236](../images/image-20210906153942236.png)
-    * 由于wasmtime是32bit的指针地址域，因此是4G，而stable memory需要和wasm time适配， 所以也是4G，现在提高的是stable内存， 可以简单的理解为此次升级是在Canister和stable memory内存之间加了一个中间件， 让32bit的wasmtime可以使用8G的stable内存（实际上是扩容到了16T， 即64bit， 但是官方此次仅提升到8G）
+    * 由于wasmtime是32bit的指针地址域，因此是4G，而stable memory需要和wasm time适配， 所以也是4G，现阶段IC经过升级，stable内存可以拓展到8G， 可以简单的理解为此次升级是在Canister和stable memory内存之间加了一个中间件， 让32bit的wasmtime可以使用8G的stable内存（实际上是扩容到了16T， 即64bit， 但是官方此次仅提升到8G）
       * ![image-20210906162315617](../images/image-20210906162315617.png)
-    * 4G 的stable内存（非WebAssembly）
+    * 8G 的stable内存（内存模型遵循的是WebAssembly的内存模型）
       * ![image-20210906161644343](../images/image-20210906161644343.png)
     * 4G 的堆内存（GC限制）
 
