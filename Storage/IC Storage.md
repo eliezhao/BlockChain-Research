@@ -58,6 +58,9 @@
 
 [Reference](https://github.com/dfinity/motoko/issues/2033#issuecomment-842379468)
 
+#### 从Coping gc切换为Compacting gc的方法： 
+[Click Here](https://github.com/C-B-Elite/Internet-Computer-Research/blob/main/Storage/Storage%20Management.md)
+
 ### Canister 存储数据的三种方式 ：
 
 * 运行时：
