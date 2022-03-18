@@ -53,6 +53,13 @@ DFX 0.8.1 创建的项目中， dfx.json 文件中， build 目录下新增 `"ar
     * dfx --memory-allocation
     * Reserved : Canister自动管理内存， 但是不会超过最大限制， 收费按照12G(Stable+RTS)来算
     * Best-effort ： Canister默认使用所有内存， 可能会超过子网最大内存， 会有风险
+    * 在dfx.json中： 可以指定最大的stable memory内存页， 最大为131072，为8G。
+    ```json
+      "build": {
+         "args": "--max-stable-pages=131072"
+      }
+    ```
+    * 令人惊喜的是， 即使你指定了最大StableMemory为8G，如果你没用将这么多内存用尽，这个canister就仍然是可以升级的。比如canister使用了5G的Stable内存，max page设为131072（8G），剩下的3G没有用的stable memory仍然可以用作升级保存运行时数据用。 
 
 *   操作
 
